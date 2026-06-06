@@ -1,25 +1,8 @@
-# Large data files
-data/raw/**
-data/processed/**
-!data/processed/GSE14520_tumor_clinical.rds
-results/*.rds
-results/*.RDS
-plots/**
-!plots/
-!plots/publication/
-!plots/publication/**
-
-# R environment
-.RData
-.Rhistory
-
-# System files
 .DS_Store
-Thumbs.db
-
-# IDE files
+.Rhistory
+.RData
 .Rproj.user/
-.vscode/
-.idea/
-__pycache__/
-*.pyc
+*.tmp
+*.log
+.env
+release_staging/

@@ -1,0 +1,26 @@
+name: hcc-ferroptosis-signature
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base>=4.3
+  - r-tidyverse
+  - r-data.table
+  - r-survival
+  - r-survminer
+  - r-timeroc
+  - r-glmnet
+  - r-proc
+  - r-ggplot2
+  - r-ggpubr
+  - r-pheatmap
+  - r-cowplot
+  - r-gridextra
+  - r-rcolorbrewer
+  - r-venndiagram
+  - r-rms
+  - bioconductor-limma
+  - bioconductor-geoquery
+  - bioconductor-annotationdbi
+  - bioconductor-hgu133a2.db
+  - bioconductor-ucscxenatools

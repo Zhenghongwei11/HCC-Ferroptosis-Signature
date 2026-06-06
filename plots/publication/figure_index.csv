@@ -1,6 +1,0 @@
-"Figure","Title","Panels","PDF_File","TIFF_File"
-"Figure 2","Differential Expression Analysis","A: GSE14520 Volcano; B: GSE83148 Volcano; C: Venn Diagram; D: Hub Genes","Figure2_DEG_analysis.pdf","Figure2_DEG_analysis.tiff"
-"Figure 3","Prognostic Model Construction","A: KM Curve; B: ROC Curves; C: Risk Score; D: Model Coefficients","Figure3_prognostic_model.pdf","Figure3_prognostic_model.tiff"
-"Figure 4","Clinical Utility Assessment","A: Univariate Cox; B: Multivariate Cox; C: DCA; D: C-index","Figure4_clinical_utility.pdf","Figure4_clinical_utility.tiff"
-"Figure 5","Immune Microenvironment Analysis","A: Immune Correlation; B: Immune Boxplot; C: Checkpoint; D: Scatter","Figure5_immune_analysis.pdf","Figure5_immune_analysis.tiff"
-"Figure 6","Drug Sensitivity & Molecular Docking","A: Drug Correlation; B: HCC Drugs; C: Docking Heatmap; D: Best Docking","Figure6_drug_docking.pdf","Figure6_drug_docking.tiff"
