@@ -132,7 +132,7 @@ p2a <- ggplot(deg_all, aes(x = logFC, y = -log10(adj.P.Val+1e-300), color = Sig)
   geom_text_repel(data = head(deg_all %>% arrange(adj.P.Val), 10), aes(label = Gene), size = 3, fontface="bold", color="black") +
   geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "#9FB1B6", linewidth = 0.4) +
   geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "#9FB1B6", linewidth = 0.4) +
-  theme_pub() + labs(title = "Volcano Plot (Tumor vs Non-tumor)", y = "-log10(FDR)")
+  theme_pub() + labs(title = "Volcano Plot (Tumor vs Non-tumor)", x = "log2FC", y = "-log10(FDR)")
 
 expr_mat <- readRDS(file.path(proc_dir, "GSE14520_expr_symbol.rds"))
 clinical_all <- readRDS(file.path(proc_dir, "GSE14520_clinical.rds"))
@@ -377,13 +377,16 @@ dca_1y <- calc_dca_long(risk_data, t0_months = 12, time_label = "1-year")
 dca_3y <- calc_dca_long(risk_data, t0_months = 36, time_label = "3-year")
 dca_5y <- calc_dca_long(risk_data, t0_months = 60, time_label = "5-year")
 dca_all_long <- bind_rows(dca_1y, dca_3y, dca_5y)
+dca_all_plot <- dca_all_long %>% filter(Threshold <= 0.6)
+dca_y <- dca_all_plot %>%
+  summarise(ymin = min(NetBenefit, na.rm = TRUE), ymax = max(NetBenefit, na.rm = TRUE))
 
-p_dca_multi <- ggplot(dca_all_long, aes(x = Threshold, y = NetBenefit, color = Strategy)) +
+p_dca_multi <- ggplot(dca_all_plot, aes(x = Threshold, y = NetBenefit, color = Strategy)) +
   geom_line(linewidth = 0.75) +
   scale_color_manual(values = c(Model = "#2F4F5F", TreatAll = "#9FB1B6", TreatNone = "#C8D7DB")) +
   theme_pub() +
   facet_wrap(~Time, ncol = 3) +
-  coord_cartesian(xlim = c(0, 0.6)) +
+  coord_cartesian(xlim = c(0, 0.6), ylim = c(dca_y$ymin, dca_y$ymax)) +
   labs(title = "Decision Curve Analysis (1/3/5-year)", x = "Threshold probability", y = "Net benefit")
 
 ggsave(file.path(supp_dir, "Supp_Figure_S10_DCA_1_3_5y.pdf"), p_dca_multi, width = 13.5, height = 4.5, device = cairo_pdf)

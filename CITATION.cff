@@ -11,7 +11,7 @@ authors:
     given-names: Wenbiao
 repository-code: "https://github.com/Zhenghongwei11/Artemisia-HCC-Ferroptosis"
 license: MIT
-version: "1.0.0"
+version: "1.0.1"
 date-released: "2026-06-07"
 keywords:
   - hepatocellular carcinoma
