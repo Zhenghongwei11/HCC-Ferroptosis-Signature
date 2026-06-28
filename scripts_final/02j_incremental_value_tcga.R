@@ -90,7 +90,7 @@ tab <- bind_rows(
     Sample_N = nrow(df),
     Events = sum(df$status == 1, na.rm = TRUE)
   ) %>%
-  select(Dataset, Sample_N, Events, Model, C_index, C_index_SE, LogLik, AIC)
+  dplyr::select(Dataset, Sample_N, Events, Model, C_index, C_index_SE, LogLik, AIC)
 
 lrt_gene_vs_comb <- anova(cox_gene, cox_comb, test = "LRT")
 lrt_clin_vs_comb <- anova(cox_clin, cox_comb, test = "LRT")
@@ -137,14 +137,14 @@ adj_risk <- extract_hr(cox_comb, "risk_score") %>%
     CI95_L_per_1SD = exp(log(CI95_L) * sd_risk),
     CI95_U_per_1SD = exp(log(CI95_U) * sd_risk)
   ) %>%
-  select(
+  dplyr::select(
     Dataset, Sample_N, Events,
     RiskScore_SD, HR, CI95_L, CI95_U, P_value,
     HR_per_1SD, CI95_L_per_1SD, CI95_U_per_1SD
   )
 
 write.csv(adj_risk, file.path(res_dir, "tcga_combined_risk_score_adjusted_hr.csv"), row.names = FALSE)
-message("✅ Wrote: results/tcga_combined_risk_score_adjusted_hr.csv")
+message("Wrote: results/tcga_combined_risk_score_adjusted_hr.csv")
 
-message("✅ Wrote: results/tcga_incremental_value.csv")
-message("✅ Wrote: results/tcga_incremental_value_lrt.csv")
+message("Wrote: results/tcga_incremental_value.csv")
+message("Wrote: results/tcga_incremental_value_lrt.csv")

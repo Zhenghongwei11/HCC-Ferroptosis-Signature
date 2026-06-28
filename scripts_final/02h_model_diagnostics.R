@@ -339,7 +339,7 @@ ggsave(file.path(plot_dir, "FigureS_model_diagnostics_random_signature.pdf"), p,
 ggsave(file.path(plot_dir, "FigureS_model_diagnostics_random_signature.png"), p, width = 10, height = 4.5, dpi = 300, bg = "white")
 
 message("[Diagnostics] Done")
-message("  ✅ results/model_diagnostics_ph.csv")
-message("  ✅ results/model_diagnostics_random_signature.csv")
-message("  ✅ plots/supplementary/FigureS_model_diagnostics_random_signature.pdf")
-message("  ✅ plots/supplementary/FigureS_model_diagnostics_random_signature.png")
+message("  results/model_diagnostics_ph.csv")
+message("  results/model_diagnostics_random_signature.csv")
+message("  plots/supplementary/FigureS_model_diagnostics_random_signature.pdf")
+message("  plots/supplementary/FigureS_model_diagnostics_random_signature.png")

@@ -9,10 +9,10 @@ authors:
     given-names: Tinge
   - family-names: Chen
     given-names: Wenbiao
-repository-code: "https://github.com/Zhenghongwei11/Artemisia-HCC-Ferroptosis"
+repository-code: "https://github.com/Zhenghongwei11/HCC-Ferroptosis-Signature"
 license: MIT
-version: "1.0.1"
-date-released: "2026-06-07"
+version: "1.0.2"
+date-released: "2026-06-28"
 keywords:
   - hepatocellular carcinoma
   - ferroptosis

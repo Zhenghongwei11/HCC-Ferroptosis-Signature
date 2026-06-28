@@ -9,5 +9,7 @@
 - Time-dependent AUC is reported at 1, 3, and 5 years when follow-up and event counts support stable estimation.
 - Calibration and Brier score summaries are reported as model-performance diagnostics.
 - Decision curve analysis uses fitted Cox baseline-hazard predictions and landmark outcomes, not hardcoded baseline-risk constants.
+- Published HCC prognostic formulas are benchmarked with their published coefficients after the same within-cohort gene-level z-score transformation used for the main validation analyses; gene coverage is reported for each formula and cohort.
+- MKI67 and a cell-cycle metagene are included as simple proliferation baselines, and benchmark results should not be interpreted as proof of uniform superiority for the current score.
 - Immune analyses are marker-gene signature score analyses and checkpoint-expression summaries; they are exploratory and bulk-transcriptome based.
 - TCGA multi-omics analyses are exploratory associations with mutation, copy-number, and subtype features.

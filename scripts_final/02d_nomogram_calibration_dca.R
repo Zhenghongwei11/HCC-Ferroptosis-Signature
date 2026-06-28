@@ -269,7 +269,7 @@ mtext("AFP: Low (<300ng/ml) vs High (≥300ng/ml)",
 
 dev.off()
 
-message("  ✅ Nomogram已生成: plots/Figure7_nomogram.pdf")
+message("  Nomogram已生成: plots/Figure7_nomogram.pdf")
 
 # ============================================
 # 6. 校准曲线 (Calibration Curves)
@@ -298,7 +298,7 @@ draw_calibration <- function() {
       lty = c(2, 1, 1), col = c("red", "gray", "black"), lwd = 2, cex = 0.8
     )
   }, error = function(e) {
-    message("  ⚠️ 1年校准曲线生成失败: ", e$message)
+    message("  Warning: 1年校准曲线生成失败: ", e$message)
     plot.new()
     text(0.5, 0.5, "1-Year Calibration\nInsufficient events", cex = 1.5)
   })
@@ -322,7 +322,7 @@ draw_calibration <- function() {
       lty = c(2, 1, 1), col = c("red", "gray", "black"), lwd = 2, cex = 0.8
     )
   }, error = function(e) {
-    message("  ⚠️ 3年校准曲线生成失败: ", e$message)
+    message("  Warning: 3年校准曲线生成失败: ", e$message)
     plot.new()
     text(0.5, 0.5, "3-Year Calibration\nInsufficient events", cex = 1.5)
   })
@@ -346,7 +346,7 @@ draw_calibration <- function() {
       lty = c(2, 1, 1), col = c("red", "gray", "black"), lwd = 2, cex = 0.8
     )
   }, error = function(e) {
-    message("  ⚠️ 5年校准曲线生成失败: ", e$message)
+    message("  Warning: 5年校准曲线生成失败: ", e$message)
     plot.new()
     text(0.5, 0.5, "5-Year Calibration\nInsufficient events", cex = 1.5)
   })
@@ -355,12 +355,12 @@ draw_calibration <- function() {
 pdf(file.path(plot_dir, "Figure7_calibration.pdf"), width = 15, height = 5)
 draw_calibration()
 dev.off()
-message("  ✅ 校准曲线已生成: plots/Figure7_calibration.pdf")
+message("  校准曲线已生成: plots/Figure7_calibration.pdf")
 
 png(file.path(plot_dir, "Figure7_calibration.png"), width = 4500, height = 1500, res = 300)
 draw_calibration()
 dev.off()
-message("  ✅ 校准曲线已生成: plots/Figure7_calibration.png")
+message("  校准曲线已生成: plots/Figure7_calibration.png")
 
 # ============================================
 # 7. DCA决策曲线分析
@@ -402,7 +402,7 @@ tryCatch({
        lwd = 2,
        main = "A. 1-Year Decision Curve Analysis")
 }, error = function(e) {
-  message("  ⚠️ 1年DCA生成失败，使用手动计算")
+  message("  Warning: 1年DCA生成失败，使用手动计算")
   
   # 手动计算DCA
   thresholds <- seq(0.01, 0.99, by = 0.01)
@@ -446,7 +446,7 @@ tryCatch({
        lwd = 2,
        main = "B. 3-Year Decision Curve Analysis")
 }, error = function(e) {
-  message("  ⚠️ 3年DCA生成失败，使用手动计算")
+  message("  Warning: 3年DCA生成失败，使用手动计算")
   
   thresholds <- seq(0.01, 0.99, by = 0.01)
   
@@ -486,7 +486,7 @@ tryCatch({
        lwd = 2,
        main = "C. 5-Year Decision Curve Analysis")
 }, error = function(e) {
-  message("  ⚠️ 5年DCA生成失败，使用手动计算")
+  message("  Warning: 5年DCA生成失败，使用手动计算")
   
   thresholds <- seq(0.01, 0.99, by = 0.01)
   
@@ -516,7 +516,7 @@ tryCatch({
 
 dev.off()
 
-message("  ✅ DCA决策曲线已生成: plots/Figure7_DCA.pdf")
+message("  DCA决策曲线已生成: plots/Figure7_DCA.pdf")
 
 
 # ============================================
@@ -588,7 +588,7 @@ text(9.5, n + 0.7, "P value", cex = 0.8, font = 2, adj = 0)
 
 dev.off()
 
-message("  ✅ 森林图已生成: plots/Figure7_forest_plot.pdf")
+message("  森林图已生成: plots/Figure7_forest_plot.pdf")
 
 # ============================================
 # 9. 综合图表（Figure 7）
@@ -690,7 +690,7 @@ legend("topright", legend = c("Nomogram", "Treat All", "Treat None"),
 
 dev.off()
 
-message("  ✅ 综合图表已生成: plots/Figure7_clinical_utility_combined.pdf")
+message("  综合图表已生成: plots/Figure7_clinical_utility_combined.pdf")
 
 # ============================================
 # 10. 保存统计结果
@@ -726,18 +726,18 @@ stats_summary <- data.frame(
 write.csv(stats_summary, file.path(res_dir, "clinical_utility_summary.csv"), row.names = FALSE)
 
 message("\n" %>% paste0(rep("=", 60) %>% paste(collapse = "")))
-message("[临床图表] ✅ 所有高质量临床图表生成完成！")
+message("[临床图表] 所有高质量临床图表生成完成！")
 message(rep("=", 60) %>% paste(collapse = ""))
 message("\n输出文件:")
-message("  📊 plots/Figure7_nomogram.pdf - 列线图")
-message("  📊 plots/Figure7_calibration.pdf - 校准曲线 (1/3/5年)")
-message("  📊 plots/Figure7_DCA.pdf - DCA决策曲线 (1/3/5年)")
-message("  📊 plots/Figure7_forest_plot.pdf - 森林图")
-message("  📊 plots/Figure7_clinical_utility_combined.pdf - 综合图表")
-message("  📋 results/univariate_cox_clinical.csv - 单因素Cox结果")
-message("  📋 results/multivariate_cox_clinical.csv - 多因素Cox结果")
-message("  📋 results/nomogram_model_performance.csv - 模型性能指标")
-message("  📋 results/clinical_utility_summary.csv - 分析汇总")
+message("  plots/Figure7_nomogram.pdf - 列线图")
+message("  plots/Figure7_calibration.pdf - 校准曲线 (1/3/5年)")
+message("  plots/Figure7_DCA.pdf - DCA决策曲线 (1/3/5年)")
+message("  plots/Figure7_forest_plot.pdf - 森林图")
+message("  plots/Figure7_clinical_utility_combined.pdf - 综合图表")
+message("  results/univariate_cox_clinical.csv - 单因素Cox结果")
+message("  results/multivariate_cox_clinical.csv - 多因素Cox结果")
+message("  results/nomogram_model_performance.csv - 模型性能指标")
+message("  results/clinical_utility_summary.csv - 分析汇总")
 
 message("\n[临床图表] 模型性能:")
 message("  - C-index: ", round(c_index, 3), " (SE: ", round(c_index_se, 3), ")")

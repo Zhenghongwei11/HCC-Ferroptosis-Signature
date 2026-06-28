@@ -40,7 +40,7 @@ ensure_xena_dataset <- function(dataset, hostName = "tcgaHub", destdir = raw_xen
 message("[TCGA多组学] 读取 TCGA 风险评分...")
 tcga <- read.csv(file.path(res_dir, "TCGA_LIHC_risk_score.csv"))
 tcga <- tcga %>%
-  select(patient_id, risk_score, time_months, status) %>%
+  dplyr::select(patient_id, risk_score, time_months, status) %>%
   mutate(
     risk_group = ifelse(risk_score >= median(risk_score, na.rm = TRUE), "High", "Low")
   )
@@ -128,7 +128,7 @@ write.csv(tcga_om, file.path(res_dir, "tcga_multiomics_burden.csv"), row.names =
 
 message("[TCGA多组学] 关键基因突变与风险分组关联...")
 mut_assoc <- mut_key_long %>%
-  left_join(tcga %>% select(patient_id, risk_group), by = "patient_id") %>%
+  left_join(tcga %>% dplyr::select(patient_id, risk_group), by = "patient_id") %>%
   filter(!is.na(risk_group)) %>%
   group_by(gene) %>%
   group_modify(~{
@@ -162,8 +162,8 @@ write.csv(mut_assoc, file.path(res_dir, "tcga_multiomics_keygene_mutation_assoc.
 message("[TCGA多组学] 生成补充图...")
 plot_df <- tcga_om %>% filter(!is.na(mut_nonsilent), !is.na(cnv_burden))
 
-tp53 <- mut_key_long %>% filter(gene == "TP53") %>% select(patient_id, tp53_mut = mutated)
-ctnnb1 <- mut_key_long %>% filter(gene == "CTNNB1") %>% select(patient_id, ctnnb1_mut = mutated)
+tp53 <- mut_key_long %>% filter(gene == "TP53") %>% dplyr::select(patient_id, tp53_mut = mutated)
+ctnnb1 <- mut_key_long %>% filter(gene == "CTNNB1") %>% dplyr::select(patient_id, ctnnb1_mut = mutated)
 plot_df <- plot_df %>%
   left_join(tp53, by = "patient_id") %>%
   left_join(ctnnb1, by = "patient_id") %>%
@@ -207,7 +207,7 @@ p4 <- ggplot(cnv_plot_df, aes(x = cnv_burden, y = risk_score)) +
   theme_bw(base_size = 10) +
   labs(
     title = sprintf("CNV burden vs risk (Spearman r=%.2f, P=%.2g)", sp2$estimate, sp2$p.value),
-    x = "CNV burden (fraction |GISTIC|≥1)",
+    x = "Fraction of genes with GISTIC alteration",
     y = "Risk score"
   )
 
@@ -238,8 +238,8 @@ lihc_subtype <- subtype %>%
   )
 
 sub_df <- tcga %>%
-  select(patient_id, risk_score, risk_group) %>%
-  inner_join(lihc_subtype %>% select(patient_id, iCluster), by = "patient_id") %>%
+  dplyr::select(patient_id, risk_score, risk_group) %>%
+  inner_join(lihc_subtype %>% dplyr::select(patient_id, iCluster), by = "patient_id") %>%
   filter(!is.na(iCluster))
 
 if (nrow(sub_df) < 30) {
@@ -290,9 +290,9 @@ if (nrow(sub_df) < 30) {
 }
 
 message("[TCGA多组学] 完成")
-message("  ✅ results/tcga_multiomics_burden.csv")
-message("  ✅ results/tcga_multiomics_keygene_mutation_assoc.csv")
-message("  ✅ plots/supplementary/FigureS_tcga_multiomics.pdf")
-message("  ✅ plots/supplementary/FigureS_tcga_multiomics.png")
-message("  ✅ results/tcga_subtype_assoc.csv")
-message("  ✅ plots/supplementary/Supp_Figure_S9_TCGA_Subtypes.(png/pdf)")
+message("  results/tcga_multiomics_burden.csv")
+message("  results/tcga_multiomics_keygene_mutation_assoc.csv")
+message("  plots/supplementary/FigureS_tcga_multiomics.pdf")
+message("  plots/supplementary/FigureS_tcga_multiomics.png")
+message("  results/tcga_subtype_assoc.csv")
+message("  plots/supplementary/Supp_Figure_S9_TCGA_Subtypes.(png/pdf)")

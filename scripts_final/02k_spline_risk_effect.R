@@ -110,7 +110,7 @@ effect_tab <- bind_rows(
   extract_per_sd(tcga)
 )
 write.csv(effect_tab, file.path(res_dir, "risk_score_continuous_effect.csv"), row.names = FALSE)
-message("✅ Wrote: results/risk_score_continuous_effect.csv")
+message("Wrote: results/risk_score_continuous_effect.csv")
 
 s1 <- fit_spline(train)$pred
 s2 <- fit_spline(tcga)$pred
@@ -138,7 +138,7 @@ p <- ggplot(pred, aes(x = risk_score, y = HR)) +
 pdf(file.path(plot_dir, "FigureS_risk_score_spline.pdf"), width = 10, height = 5)
 print(p)
 dev.off()
-message("✅ Wrote: plots/supplementary/FigureS_risk_score_spline.pdf")
+message("Wrote: plots/supplementary/FigureS_risk_score_spline.pdf")
 
 ggsave(file.path(plot_dir, "FigureS_risk_score_spline.png"), p, width = 10, height = 5, dpi = 300, bg = "white")
-message("✅ Wrote: plots/supplementary/FigureS_risk_score_spline.png")
+message("Wrote: plots/supplementary/FigureS_risk_score_spline.png")

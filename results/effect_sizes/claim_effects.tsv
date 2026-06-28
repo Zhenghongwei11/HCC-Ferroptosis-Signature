@@ -1,0 +1,4 @@
+claim_id	dataset_id	outcome	model	effect_type	effect	ci_lower	ci_upper	pvalue	fdr	n
+risk_score_survival	GSE14520 (Discovery)	overall_survival	cox_risk_score_per_1sd	hazard_ratio	2.24804467504277	1.7500483584456	2.88775155074964	2.29331040881325e-10	4.5866208176265e-10	221
+risk_score_survival	TCGA-LIHC	overall_survival	cox_risk_score_per_1sd	hazard_ratio	1.23781228941735	1.08755902908453	1.40882400206116	0.00123243706214224	0.00123243706214224	370
+risk_score_adjusted_for_proliferation	TCGA-LIHC	overall_survival	cox_risk_score_mki67_cellcycle	hazard_ratio	1.06606805180419	0.873462988349517	1.30114395943107	0.529171035755641	0.529171035755641	370

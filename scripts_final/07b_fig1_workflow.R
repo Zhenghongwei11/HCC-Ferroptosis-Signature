@@ -24,7 +24,6 @@ base_dir <- detect_base_dir()
 pub_dir <- file.path(base_dir, "plots", "publication")
 dir.create(pub_dir, showWarnings = FALSE, recursive = TRUE)
 
-
 clr_bg <- "#FBFCFE"
 clr_header <- "#1F4E79"
 clr_body <- "#FFFFFF"
@@ -53,7 +52,7 @@ modules <- data.frame(
     "Univariate Cox and LASSO-Cox (10-fold CV)\nNine-gene fixed-coefficient risk score\nInternal evaluation: KM survival,\ntime-dependent ROC (1/3/5 years), bootstrap C-index",
     "Testing in TCGA-LIHC, ICGC-LIRI-JP,\nand GEO cohorts\nMetrics: C-index, time-dependent AUC,\n3-year calibration, IPCW Brier\nRobustness: PH checks, RMST,\nrandom-signature benchmark",
     "Prediction-model context: multivariable Cox,\nnomogram, decision-curve analysis\nBiological context: immune signatures,\ncheckpoints, TCGA mutation/CNV/subtypes",
-    "Findings support HCC risk stratification\nand hypothesis generation.\nProspective validation with predefined\nthresholds is required."
+    "Findings support further evaluation\nof HCC risk stratification.\nProspective validation with predefined\nthresholds is required."
   ),
   body_size = c(3.9, 3.8, 3.95, 3.45, 3.55, 3.65),
   stringsAsFactors = FALSE
@@ -103,11 +102,6 @@ p <- ggplot() +
     color = clr_arrow, linewidth = 0.9,
     arrow = arrow(length = unit(0.22, "cm"), type = "closed")
   ) +
-  annotate(
-    "text", x = 0.5, y = 0.985,
-    label = "Overview of Study Design and Validation Strategy",
-    color = "#173A5C", fontface = "bold", size = 6.2
-  ) +
   coord_fixed(xlim = c(0, 1), ylim = c(0, 1), expand = FALSE, clip = "off") +
   theme_void() +
   theme(plot.margin = margin(8, 16, 8, 16))
@@ -117,6 +111,5 @@ out_png <- file.path(pub_dir, "Figure1_workflow.png")
 
 ggsave(out_pdf, p, width = 13.5, height = 8.5, device = cairo_pdf, bg = "white")
 ggsave(out_png, p, width = 13.5, height = 8.5, dpi = 350, bg = "white")
-
 
 message("Figure 1 workflow updated: ", out_png)

@@ -118,6 +118,6 @@ ferro_deg_result <- data.frame(
 write.csv(ferro_deg_result, file.path(res_dir, "ferroptosis_DEG_intersection.csv"), row.names = FALSE)
 
 message("[DEG] 完成")
-message("  ✅ ", file.path(res_dir, "deg_GSE14520_all.csv"))
-message("  ✅ ", file.path(res_dir, "deg_GSE14520_sig.csv"))
-message("  ✅ ", file.path(res_dir, "ferroptosis_DEG_intersection.csv"))
+message("  ", file.path(res_dir, "deg_GSE14520_all.csv"))
+message("  ", file.path(res_dir, "deg_GSE14520_sig.csv"))
+message("  ", file.path(res_dir, "ferroptosis_DEG_intersection.csv"))

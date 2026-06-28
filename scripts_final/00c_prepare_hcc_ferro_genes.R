@@ -18,17 +18,13 @@ if (!dir.exists("data/processed")) {
   stop("请在项目根目录运行此脚本")
 }
 
-raw_dir <- "data/raw"
 proc_dir <- "data/processed"
 ref_dir <- "data/references"
 res_dir <- "results"
 
-ferrdb_dir <- file.path(raw_dir, "ferrdb_v2_early_preview_20231231")
-ferro_ref_file <- file.path(ref_dir, "ferroptosis_genes_expanded.csv")
-
-# 1) Read FerrDb-derived gene list. Public releases use the curated
-# data/references/ferroptosis_genes_expanded.csv table to avoid bundling
-# large raw database annotation text that is not needed for reproduction.
+# 1) Read the curated ferroptosis reference. The public repository ships a
+# compact gene-level reference derived from FerrDb V2 so the analysis can be
+# rerun without redistributing the full source tables.
 read_symbols <- function(path, symbol_col) {
   if (!file.exists(path)) return(character())
   df <- read.csv(path, stringsAsFactors = FALSE)
@@ -39,24 +35,19 @@ read_symbols <- function(path, symbol_col) {
   toupper(sym)
 }
 
-if (file.exists(ferro_ref_file)) {
-  ferrdb_ref <- read.csv(ferro_ref_file, stringsAsFactors = FALSE)
-  if (!("Gene" %in% colnames(ferrdb_ref))) stop("ferroptosis_genes_expanded.csv 缺少 Gene 列")
-  ferrdb_genes <- unique(toupper(trimws(ferrdb_ref$Gene)))
-  ferrdb_genes <- ferrdb_genes[!is.na(ferrdb_genes) & ferrdb_genes != ""]
-} else if (dir.exists(ferrdb_dir)) {
-  ferrdb_genes <- unique(c(
-    read_symbols(file.path(ferrdb_dir, "driver.csv"), "Symbol_or_reported_abbr"),
-    read_symbols(file.path(ferrdb_dir, "suppressor.csv"), "Symbol"),
-    read_symbols(file.path(ferrdb_dir, "marker.csv"), "Symbol"),
-    read_symbols(file.path(ferrdb_dir, "unclassified.reg.csv"), "Symbol")
-  ))
-} else {
-  stop("缺少 ferroptosis reference: data/references/ferroptosis_genes_expanded.csv")
+compact_ref <- file.path(ref_dir, "ferroptosis_genes_expanded.csv")
+if (!file.exists(compact_ref)) {
+  stop("Missing compact ferroptosis reference: data/references/ferroptosis_genes_expanded.csv")
 }
+ferrdb_ref <- read.csv(compact_ref, stringsAsFactors = FALSE)
+if (!"Gene" %in% names(ferrdb_ref)) {
+  stop("The compact ferroptosis reference must contain a Gene column.")
+}
+ferrdb_genes <- unique(toupper(trimws(ferrdb_ref$Gene)))
+ferrdb_genes <- ferrdb_genes[!is.na(ferrdb_genes) & ferrdb_genes != ""]
 
 if (length(ferrdb_genes) == 0) {
-  stop("FerrDb-derived gene list is empty")
+  stop("FerrDb 基因列表为空，请检查下载文件")
 }
 
 # 2) Ensure DEG table exists; if not, compute from GSE14520
@@ -127,6 +118,5 @@ if (nrow(hcc_ferro) == 0) {
 out_path <- file.path(res_dir, "ferroptosis_genes_hcc_context.csv")
 write.csv(hcc_ferro, out_path, row.names = FALSE)
 
-message("[00c] ✅ ferroptosis_genes_hcc_context.csv 已生成")
-message("  记录数: ", nrow(hcc_ferro))
-message("  输出: ", out_path)
+message("[00c] Wrote: ", out_path)
+message("[00c] Records: ", nrow(hcc_ferro))

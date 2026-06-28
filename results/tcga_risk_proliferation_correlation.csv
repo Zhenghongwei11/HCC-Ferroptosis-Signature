@@ -1,0 +1,4 @@
+"Metric","Spearman_rho","P_value"
+"Risk score vs MKI67",0.645565688034306,5.29338831096764e-45
+"Risk score vs cell-cycle metagene",0.648170687287116,0
+"MKI67 vs cell-cycle metagene",0.928089198611556,5.8137013490186e-160

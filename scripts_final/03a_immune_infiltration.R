@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # 03a_immune_infiltration.R
-# 免疫浸润分析 - 修复版（探针ID转基因符号）
+# 免疫浸润分析
 # 使用方法: Rscript scripts_final/03a_immune_infiltration.R
 
 options(device = pdf)
@@ -327,11 +327,11 @@ if (exists("diff_results") && nrow(diff_results) > 0) {
 
 dev.off()
 
-message("[免疫分析] ✅ 免疫浸润分析完成！")
+message("[免疫分析] 免疫浸润分析完成！")
 message("[免疫分析] 输出文件:")
-message("  ✅ ", file.path(proc_dir, "GSE14520_expr_symbol.rds"))
-message("  ✅ ", file.path(res_dir, "marker_immune_signature_scores.csv"))
-message("  ✅ ", file.path(res_dir, "immune_risk_correlation.csv"))
-message("  ✅ ", file.path(res_dir, "gene_immune_correlation.csv"))
-message("  ✅ ", file.path(res_dir, "immune_risk_group_diff.csv"))
-message("  ✅ ", file.path(plot_dir, "Figure8_immune_infiltration.pdf"))
+message("  ", file.path(proc_dir, "GSE14520_expr_symbol.rds"))
+message("  ", file.path(res_dir, "marker_immune_signature_scores.csv"))
+message("  ", file.path(res_dir, "immune_risk_correlation.csv"))
+message("  ", file.path(res_dir, "gene_immune_correlation.csv"))
+message("  ", file.path(res_dir, "immune_risk_group_diff.csv"))
+message("  ", file.path(plot_dir, "Figure8_immune_infiltration.pdf"))

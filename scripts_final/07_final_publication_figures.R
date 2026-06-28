@@ -70,6 +70,18 @@ scale_fill_diverging <- function(...) {
   scale_fill_gradient2(low = "#2F4F5F", mid = "#F2F5F6", high = "#5F9EA6", ...)
 }
 
+format_immune_label <- function(x) {
+  x %>%
+    str_replace_all("_", " ") %>%
+    str_replace_all("\\bB cell\\b", "B-cell") %>%
+    str_replace_all("\\bCD4 T cell\\b", "CD4 T-cell") %>%
+    str_replace_all("\\bCD8 T cell\\b", "CD8 T-cell") %>%
+    str_replace_all("\\bMacrophage\\b", "macrophage") %>%
+    str_replace_all("\\bMonocyte\\b", "monocyte") %>%
+    str_replace_all("\\bType 17 T helper\\b", "Type 17 T-helper") %>%
+    str_replace_all("\\bCentral memory\\b", "Central-memory")
+}
+
 lollipop_h <- function(df, x_col, y_col, color_col = NULL, title = "") {
   p <- ggplot(df, aes(x = !!sym(x_col), y = reorder(!!sym(y_col), !!sym(x_col)))) +
     geom_segment(aes(x = 0, xend = !!sym(x_col), y = !!sym(y_col), yend = !!sym(y_col)),
@@ -96,7 +108,7 @@ dotplot_h <- function(df, x_col, y_col, color_col = NULL, title = "") {
 save_fig <- function(name, plot, w=12, h=10) {
   ggsave(file.path(pub_dir, paste0(name, ".pdf")), plot, width = w, height = h, device = cairo_pdf)
   ggsave(file.path(pub_dir, paste0(name, ".png")), plot, width = w, height = h, dpi = 300, bg = "white")
-  message(paste0("  ✅ ", name, " (PDF+PNG) saved."))
+  message(paste0("  ", name, " (PDF+PNG) saved."))
 }
 
 # ============================================================ 
@@ -141,9 +153,9 @@ top_genes <- intersect(top_genes, rownames(expr_mat)) %>% head(20)
 expr_sub <- expr_mat[top_genes, , drop = FALSE]
 
 group_info <- clinical_all %>%
-  select(geo_accession, `Tissue:ch1`) %>%
+  dplyr::select(geo_accession, `Tissue:ch1`) %>%
   mutate(Group = ifelse(grepl("Tumor", `Tissue:ch1`, ignore.case = TRUE), "Tumor", "Non-Tumor")) %>%
-  select(geo_accession, Group)
+  dplyr::select(geo_accession, Group)
 
 sample_order <- group_info$geo_accession[group_info$geo_accession %in% colnames(expr_sub)]
 expr_long <- as.data.frame(expr_sub[, sample_order, drop = FALSE]) %>%
@@ -246,10 +258,14 @@ for (i in seq_along(roc_times)) roc_df <- rbind(roc_df, data.frame(FPR=roc_res$F
 p3b <- ggplot(roc_df, aes(x = FPR, y = TPR, color = Time)) + geom_path(linewidth = 1.2) + scale_color_cool() + geom_abline(linetype="dashed") + theme_pub() + labs(title = "ROC Analysis")
 
 risk_sorted <- risk_data %>% arrange(risk_score) %>% mutate(rank = row_number())
-p3c <- ggplot(risk_sorted, aes(x = rank, y = risk_score, color = risk_group)) + geom_point(size = 1) + scale_color_cool() + theme_pub() + labs(title = "Risk Score Distribution")
+p3c <- ggplot(risk_sorted, aes(x = rank, y = risk_score, color = risk_group)) +
+  geom_point(size = 1) +
+  scale_color_cool(labels = c("Low risk", "High risk")) +
+  theme_pub() +
+  labs(title = "Risk Score Distribution", x = "Ranked patients", y = "Risk score", color = "Risk group")
 
-model_coef$Direction <- ifelse(model_coef$Coefficient > 0, "Risk", "Protective")
-p3d <- ggplot(model_coef, aes(x = Coefficient, y = reorder(Gene, Coefficient), fill = Direction)) + geom_col() + scale_fill_cool() + theme_pub() + labs(title = "Model Coefficients", y="")
+model_coef$CoefficientSign <- ifelse(model_coef$Coefficient > 0, "Positive", "Negative")
+p3d <- ggplot(model_coef, aes(x = Coefficient, y = reorder(Gene, Coefficient), fill = CoefficientSign)) + geom_col() + scale_fill_cool() + theme_pub() + labs(title = "Model Coefficients", y="", fill = "Coefficient sign")
 
 fig3 <- plot_grid(p3a, p3b, p3c, p3d, labels = "AUTO", ncol = 2)
 save_fig("Figure3_prognostic_model", fig3)
@@ -391,7 +407,7 @@ p_dca_multi <- ggplot(dca_all_plot, aes(x = Threshold, y = NetBenefit, color = S
 
 ggsave(file.path(supp_dir, "Supp_Figure_S10_DCA_1_3_5y.pdf"), p_dca_multi, width = 13.5, height = 4.5, device = cairo_pdf)
 ggsave(file.path(supp_dir, "Supp_Figure_S10_DCA_1_3_5y.png"), p_dca_multi, width = 13.5, height = 4.5, dpi = 300, bg = "white")
-message("  ✅ Supplementary DCA (1/3/5-year) saved.")
+message("  Supplementary DCA (1/3/5-year) saved.")
 
 nomo_file <- file.path(res_dir, "nomogram_model_performance.csv")
 risk_cindex <- as.numeric(model_stats$Value[model_stats$Metric == "C-index"])
@@ -434,18 +450,30 @@ save_fig("Figure4_decision_curve_nomogram", fig4)
 # Figure 5: Immune (还原 A-D)
 # ----------------------------------------------------------------------------- 
 message("[5/5] Figure 5...")
-immune_corr_plot <- immune_corr %>% arrange(desc(abs(Correlation))) %>% head(12) %>% mutate(Direction = ifelse(Correlation >= 0, "Positive", "Negative"))
-p5a <- lollipop_h(immune_corr_plot, "Correlation", "Cell_Type", "Direction", title = "Immune Correlation") +
+immune_corr_plot <- immune_corr %>%
+  arrange(desc(abs(Correlation))) %>%
+  head(12) %>%
+  mutate(
+    Direction = ifelse(Correlation >= 0, "Positive", "Negative"),
+    Cell_Label = format_immune_label(Cell_Type)
+  )
+p5a <- lollipop_h(immune_corr_plot, "Correlation", "Cell_Label", "Direction", title = "Immune Correlation") +
   scale_color_manual(values = c(Positive = "#6FA8B5", Negative = "#2F4F5F")) +
   labs(x = "Correlation", y = NULL)
 
-imm_box <- immune_scores %>% rownames_to_column("sample") %>% inner_join(risk_data, by="sample") %>% select(risk_group, 1:5) %>% select(-sample) %>% pivot_longer(-risk_group)
+imm_box <- immune_scores %>%
+  rownames_to_column("sample") %>%
+  inner_join(risk_data, by="sample") %>%
+  dplyr::select(risk_group, 1:5) %>%
+  dplyr::select(-sample) %>%
+  pivot_longer(-risk_group) %>%
+  mutate(name = format_immune_label(name))
 p5b <- ggplot(imm_box, aes(x=name, y=value, fill=risk_group)) +
   geom_boxplot(outlier.size = 0.5) +
-  scale_fill_cool() +
+  scale_fill_cool(labels = c("Low risk", "High risk")) +
   theme_pub() +
   theme(axis.text.x = element_text(angle=45, hjust=1)) +
-  labs(title="Immune Infiltration", x = "Cell type", y = "Signature score")
+  labs(title="Immune Infiltration", x = "Cell type", y = "Signature score", fill = "Risk group")
 
 check_plot <- checkpoint_diff %>%
   arrange(P_value) %>%
@@ -460,12 +488,23 @@ p5c <- ggplot(check_plot, aes(x = Log2FC, y = reorder(Gene, Log2FC), color = Dir
   labs(title = "Checkpoints (High vs Low)", x = "Log2FC (High - Low)", y = "Checkpoint", size = "-log10(P)")
 
 merged_imm <- inner_join(risk_data, immune_scores %>% rownames_to_column("sample"), by="sample")
-p5d <- ggplot(merged_imm, aes(x = risk_score, y = M2_Macrophage)) + geom_point(aes(color = risk_group), alpha = 0.5) + geom_smooth(method = "lm", color="black") + stat_cor(method="spearman") + scale_color_cool() + theme_pub() + labs(title = "Risk vs M2 Macrophages")
+p5d <- ggplot(merged_imm, aes(x = risk_score, y = M2_Macrophage)) +
+  geom_point(aes(color = risk_group), alpha = 0.5) +
+  geom_smooth(method = "lm", color="black") +
+  stat_cor(method="spearman") +
+  scale_color_cool(labels = c("Low risk", "High risk")) +
+  theme_pub() +
+  labs(
+    title = "Risk vs M2 macrophages",
+    x = "Risk score",
+    y = "M2 macrophage signature score",
+    color = "Risk group"
+  )
 
 fig5 <- plot_grid(p5a, p5b, p5c, p5d, labels = "AUTO", ncol = 2)
 save_fig("Figure5_immune_analysis", fig5)
 
 message("\n============================================================")
 message("所有主图已生成。输出目录: plots/publication/")
-message("状态: 当前主线保留 Figure 2-5；药敏分析已退出投稿主线。")
+message("Main publication figures generated.")
 message("============================================================")

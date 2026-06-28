@@ -157,7 +157,7 @@ for (nm in names(cohorts)) {
 
 brier_df <- bind_rows(brier_rows)
 write.csv(brier_df, file.path(res_dir, "external_validation_brier.csv"), row.names = FALSE)
-message("✅ Wrote: results/external_validation_brier.csv")
+message("Wrote: results/external_validation_brier.csv")
 
 # 3) 3-year calibration plots (risk at 36 months) per cohort.
 cal_time <- 36
@@ -208,9 +208,9 @@ draw_calibration_panels <- function() {
 pdf(file.path(plot_dir, "FigureS_external_calibration_3y.pdf"), width = 12, height = 12)
 draw_calibration_panels()
 dev.off()
-message("✅ Wrote: plots/supplementary/FigureS_external_calibration_3y.pdf")
+message("Wrote: plots/supplementary/FigureS_external_calibration_3y.pdf")
 
 png(file.path(plot_dir, "FigureS_external_calibration_3y.png"), width = 3600, height = 3600, res = 300)
 draw_calibration_panels()
 dev.off()
-message("✅ Wrote: plots/supplementary/FigureS_external_calibration_3y.png")
+message("Wrote: plots/supplementary/FigureS_external_calibration_3y.png")

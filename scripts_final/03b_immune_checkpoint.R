@@ -300,10 +300,10 @@ write.csv(surrogate_by_risk, file.path(res_dir, "dysfunction_exclusion_group_sum
 # ============================================
 # 完成
 # ============================================
-message("[免疫检查点] ✅ 免疫检查点分析完成！")
+message("[免疫检查点] 免疫检查点分析完成！")
 message("[免疫检查点] 输出文件:")
-message("  ✅ ", file.path(res_dir, "checkpoint_risk_diff.csv"))
-message("  ✅ ", file.path(res_dir, "checkpoint_risk_correlation.csv"))
-message("  ✅ ", file.path(res_dir, "dysfunction_exclusion_surrogate.csv"))
-message("  ✅ ", file.path(res_dir, "dysfunction_exclusion_group_summary.csv"))
-message("  ✅ ", file.path(plot_dir, "Figure9_immune_checkpoint.pdf"))
+message("  ", file.path(res_dir, "checkpoint_risk_diff.csv"))
+message("  ", file.path(res_dir, "checkpoint_risk_correlation.csv"))
+message("  ", file.path(res_dir, "dysfunction_exclusion_surrogate.csv"))
+message("  ", file.path(res_dir, "dysfunction_exclusion_group_summary.csv"))
+message("  ", file.path(plot_dir, "Figure9_immune_checkpoint.pdf"))
